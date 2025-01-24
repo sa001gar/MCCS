@@ -1,0 +1,43 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+<section class="feedback">
+    <div class="contact-container">
+        <a href="index.html" class="contact-back-button"><i class="fa-solid fa-arrow-left" ></i></a>
+        <h1 class="contact-title">Share your feedback with us</h1>
+
+        <form id="contactForm">
+            <div class="contact-form-group">
+                <input type="text" class="contact-input" placeholder="Full name" required>
+            </div>
+            <div class="contact-form-group">
+                <input type="email" class="contact-input" placeholder="Email address" required>
+            </div>
+            <div class="contact-form-group">
+                <textarea class="contact-textarea" placeholder="Message..." required></textarea>
+            </div>
+            <button type="submit" class="contact-button">Submit →</button>
+        </form>
+
+        <div class="contact-social-links">
+            <a href="#" class="contact-social-link contact-facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="contact-social-link contact-twitter">
+                <i class="fab fa-x"></i>
+            </a>
+            <a href="#" class="contact-social-link contact-instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="#" class="contact-social-link contact-linkedin">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" class="contact-social-link contact-github">
+                <i class="fab fa-github"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

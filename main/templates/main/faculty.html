@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/faculty.css'%}" />
+
+    <div class="breadcrumb">
+      <a href="#">Home</a>
+      <i class="fas fa-chevron-right" style="font-size: 0.875rem; opacity: 0.7;"></i>
+    <a href="#">About</a>
+    </div> 
+
+    <!-- Faculty Page  -->
+    <main class="container">
+        <div class="section-header">
+            <div class="section-title">
+                <div class="faculty-icon"><i class="fas fa-users"></i></div>
+                Faculty Members
+            </div>
+            <div class="button-group">
+                <button class="button active" data-filter="teaching">Teaching</button>
+                <button class="button" data-filter="nonTeaching">Non-Teaching</button>
+            </div>
+        </div>
+
+        <div class="faculty-grid" id="facultyGrid"></div>
+    </main>
+
+    <div id="facultyModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="facultyDetails"></div>
+        </div>
+    </div>
+    <!-- End Faculty Page  -->
+
+    <script src="{% static 'js/faculty.js' %}"></script>
+
+{% endblock %}
