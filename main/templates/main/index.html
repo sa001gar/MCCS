@@ -11,9 +11,15 @@
       <div class="highlight-label">Highlights</div>
       <div class="highlight-scroll">
         <div class="scroll-content">
-          <a href="#">Annual Magazine Published (i-Deserve)</a>
+          {% comment %} <a href="#">Annual Magazine Published (i-Deserve)</a>
           <span>|</span>
-          <a href="#">Internal Exam 1st Sem 2024</a>
+          <a href="#">Internal Exam 1st Sem 2024</a> {% endcomment %}
+          {% for notice in highlights %}
+          <a href="#">{{ notice.title }}</a>
+          {% if not forloop.last %}
+          <span>|</span>
+          {% endif %}
+          {% endfor %}
         </div>
       </div>
     </section>
@@ -59,15 +65,11 @@
         <div class="notice-board">
           <h2 class="notice-title">Notice Board</h2>
           <div class="notice-content">
-            <a href="#0" class="notice-item">New system update available!</a>
-            <a href="#0" class="notice-item">Magazine Release.</a>
-            <a href="#0" class="notice-item">Holiday schedule announcement.</a>
-            <a href="#0" class="notice-item">Magazine Release.</a>
-            <a href="#0" class="notice-item">Holiday schedule announcement.</a>
-            <a href="#0" class="notice-item">Magazine Release.</a>
-            <a href="#0" class="notice-item">Holiday schedule announcement.</a>
-            <a href="#0" class="notice-item">Magazine Release.</a>
-            <a href="#0" class="notice-item">Holiday schedule announcement.</a>
+            {% comment %} <a href="#0" class="notice-item">New system update available!</a>
+            <a href="#0" class="notice-item">Magazine Release.</a> {% endcomment %}
+            {% for notice in notices %}
+            <a href="#0" class="notice-item">{{ notice.title }}</a>
+            {% endfor %}
           </div>
         </div>
       </div>

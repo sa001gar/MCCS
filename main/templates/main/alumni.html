@@ -175,7 +175,7 @@
     }
 
     .alumni-designation {
-        color: var(--text-muted);
+        color: var(--text-black);
         font-size: 0.9rem;
         margin-bottom: 1rem;
     }
@@ -280,17 +280,17 @@
         }
     }
 </style>
-</head>
-<body>
-    <nav class="breadcrumb">
-        <a href="#">Home</a>
-        <i class="fas fa-chevron-right" style="font-size: 0.875rem; opacity: 0.7;"></i>
-        <a href="#">Department Gallery</a>
-    </nav>
+
+<nav class="breadcrumb">
+    <a href="#">Home</a>
+    <i class="fas fa-chevron-right" style="font-size: 0.875rem; opacity: 0.7;"></i>
+    <a href="#">Department Gallery</a>
+</nav>
+
 <div class="hero">
     <div class="hero-content">
         <h1>Our Alumni Network</h1>
-        <p>Connect with our distinguished alumni who are making an impact across the globe</p>
+        <p>Meet our successful graduates who are making a difference in the tech world</p>
     </div>
 </div>
 
@@ -301,8 +301,9 @@
             <input type="text" placeholder="Search alumni by name or company..." id="searchInput">
         </div>
         <select class="batch-select" id="batchSelect">
-            <option value="all">All Batches</option>
-            <!-- Will be populated dynamically -->
+            {% for batch_year in batch_years %}
+                <option value="{{ batch_year }}">Batch {{ batch_year }}</option>
+            {% endfor %}
         </select>
     </div>
 
@@ -312,141 +313,263 @@
 </div>
 
 <script>
-    const alumniData = [
-        {
-            id: 1,
-            name: "Sourov Hazra",
-            batch: 2017,
-            designation: "Senior Software Engineer",
-            company: "Samassa Solutions Pvt. Ltd.",
-            image: "https://computersciencemancoll.in/admin/alumniimg/my.jpg",
-            github: "https://github.com",
-            linkedin: "https://linkedin.com",
-            email: "mailto:john@example.com"
-        },
-        {
-            id: 2,
-            name: "Sudip Mondal",
-            batch: 2017,
-            designation: "Product Manager",
-            company: "Samassa Solutions Pvt. Ltd.",
-            image: "https://computersciencemancoll.in/admin/alumniimg/sudip.jpg",
-            github: "https://github.com",
-            linkedin: "https://linkedin.com",
-            email: "mailto:jane@example.com"
-        },
-        {
-            id: 3,
-            name: "Mainak Das",
-            batch: 2015,
-            designation: "Full Stack Developer",
-            company: "Amazon",
-            image: "https://computersciencemancoll.in/admin/alumniimg/1732540608-sayan_jpg.jpg",
-            github: "https://github.com",
-            linkedin: "https://linkedin.com",
-            email: "mailto:mike@example.com"
-        },
-        {
-            id: 4,
-            name: "Anurag Mukherjee",
-            batch: 2018,
-            designation: "AI Research Engineer",
-            company: "DeepMind",
-            image: "https://computersciencemancoll.in/admin/alumniimg/1732540608-sayan_jpg.jpg",
-            github: "https://github.com",
-            linkedin: "https://linkedin.com",
-            email: "mailto:sarah@example.com"
-        },
-        {
-            id: 5,
-            name: "Prasun Pal",
-            batch: 2020,
-            designation: "Data Scientist",
-            company: "Netflix",
-            image: "https://computersciencemancoll.in/admin/alumniimg/1732540608-sayan_jpg.jpg",
-            github: "https://github.com",
-            linkedin: "https://linkedin.com",
-            email: "mailto:robert@example.com"
-        }
-    ];
+    document.addEventListener('DOMContentLoaded', async () => {
+        const select = document.getElementById('batchSelect');
+        const searchInput = document.getElementById('searchInput');
+        const grid = document.getElementById('alumniGrid');
+        let currentBatch = '';
+        let searchTerm = '';
 
-    function createAlumniCard(alumni) {
-        return `
-            <div class="alumni-card">
-                <div class="card-header">
-                    <span class="batch-badge">Batch ${alumni.batch}</span>
-                    <img src="${alumni.image}" alt="${alumni.name}" class="profile-image">
-                </div>
-                <div class="card-body">
-                    <h3 class="alumni-name">${alumni.name}</h3>
-                    <p class="alumni-designation">${alumni.designation}</p>
-                    <div class="alumni-company">${alumni.company}</div>
-                    <div class="social-links">
-                        <a href="${alumni.github}" class="social-link" target="_blank" title="GitHub">
-                            <i class="fab fa-github"></i>
-                        </a>
-                        <a href="${alumni.linkedin}" class="social-link" target="_blank" title="LinkedIn">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="${alumni.email}" class="social-link" title="Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
+        function createAlumniCard(alumni) {
+            const profileImage = alumni.profile_image || '/static/main/images/default-profile.jpg';
+            return `
+                <div class="alumni-card">
+                    <div class="card-header">
+                        <span class="batch-badge">Batch ${alumni.batch_year}</span>
+                        <div class="profile-image">
+                            <img src="${profileImage}" alt="${alumni.name}" onerror="this.src='/static/main/images/default-profile.jpg'">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="alumni-name">${alumni.name}</h3>
+                        <p class="alumni-designation">${alumni.current_position}</p>
+                        <div class="alumni-company">${alumni.company}</div>
+                        <div class="social-links">
+                            ${alumni.github ? `
+                                <a href="${alumni.github}" class="social-link" target="_blank" title="GitHub">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                            ` : ''}
+                            ${alumni.linkedin_url ? `
+                                <a href="${alumni.linkedin_url}" class="social-link" target="_blank" title="LinkedIn">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            ` : ''}
+                            ${alumni.email ? `
+                                <a href="mailto:${alumni.email}" class="social-link" title="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+                            ` : ''}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
-    }
+            `;
+        }
 
-    function populateBatchSelect() {
-        const select = document.getElementById('batchSelect');
-        const years = [...new Set(alumniData.map(alumni => alumni.batch))].sort((a, b) => b - a);
-        
-        years.forEach(year => {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = `Batch ${year}`;
-            select.appendChild(option);
-        });
-    }
+        async function fetchAndDisplayAlumni() {
+            grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-2x"></i></div>';
 
-    function filterAlumni() {
-        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-        const selectedBatch = document.getElementById('batchSelect').value;
-        const grid = document.getElementById('alumniGrid');
+            try {
+                let url = '/api/alumni/?';
+                if (currentBatch) {
+                    url += `batch_no=${currentBatch}`;
+                }
 
-        grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-2x"></i></div>';
+                const response = await fetch(url);
+                const data = await response.json();
 
-        setTimeout(() => {
-            const filteredAlumni = alumniData.filter(alumni => {
-                const matchesSearch = alumni.name.toLowerCase().includes(searchTerm) ||
-                                   alumni.company.toLowerCase().includes(searchTerm) ||
-                                   alumni.designation.toLowerCase().includes(searchTerm);
-                const matchesBatch = selectedBatch === 'all' || alumni.batch.toString() === selectedBatch;
-                return matchesSearch && matchesBatch;
-            });
+                if (!data.alumni || data.alumni.length === 0) {
+                    grid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-user-graduate"></i>
+                            <p>No alumni found</p>
+                        </div>
+                    `;
+                    return;
+                }
 
-            if (filteredAlumni.length === 0) {
+                let filteredAlumni = data.alumni;
+                if (searchTerm) {
+                    const term = searchTerm.toLowerCase();
+                    filteredAlumni = filteredAlumni.filter(alumni => 
+                        alumni.name.toLowerCase().includes(term) ||
+                        alumni.company.toLowerCase().includes(term) ||
+                        alumni.current_position.toLowerCase().includes(term)
+                    );
+                }
+
+                if (filteredAlumni.length === 0) {
+                    grid.innerHTML = `
+                        <div class="no-results">
+                            <i class="fas fa-user-graduate"></i>
+                            <p>No alumni found matching your search criteria</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = filteredAlumni.map(createAlumniCard).join('');
+            } catch (error) {
+                console.error('Error fetching alumni data:', error);
                 grid.innerHTML = `
                     <div class="no-results">
-                        <i class="fas fa-user-graduate"></i>
-                        <p>No alumni found matching your criteria</p>
+                        <i class="fas fa-exclamation-circle"></i>
+                        <p>Failed to load alumni data. Please try again later.</p>
                     </div>
                 `;
-                return;
             }
+        }
 
-            grid.innerHTML = filteredAlumni.map(alumni => createAlumniCard(alumni)).join('');
-        }, 500);
-    }
+        // Event Listeners
+        select.addEventListener('change', () => {
+            currentBatch = select.value;
+            fetchAndDisplayAlumni();
+        });
 
-    document.addEventListener('DOMContentLoaded', () => {
-        populateBatchSelect();
-        
-        document.getElementById('searchInput').addEventListener('input', filterAlumni);
-        document.getElementById('batchSelect').addEventListener('change', filterAlumni);
-        
-        filterAlumni();
+        let searchTimeout;
+        searchInput.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchTerm = searchInput.value;
+                fetchAndDisplayAlumni();
+            }, 300);
+        });
+
+        // Initial load
+        fetchAndDisplayAlumni();
     });
 </script>
+
+<style>
+    .error {
+        color: #ef4444;
+        text-align: center;
+        padding: 2rem;
+        font-size: 1.1rem;
+    }
+
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+        width: 100%;
+        color: var(--text-muted);
+    }
+
+    .loading i {
+        animation: spin 1s linear infinite;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        border: 4px solid white;
+        box-shadow: var(--shadow);
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translate(-50%, 50%);
+        overflow: hidden;
+        background: white;
+    }
+
+    .profile-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        aspect-ratio: 1/1;
+    }
+
+    .alumni-card {
+        background: var(--background);
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+
+    .alumni-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .card-header {
+        background: var(--gradient);
+        height: 100px;
+        position: relative;
+    }
+
+    .card-body {
+        padding: 4rem 1.5rem 1.5rem;
+        text-align: center;
+    }
+
+    .alumni-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+    }
+
+    .alumni-designation {
+        color: var(--text-dark);
+        font-size: 0.9rem;
+        margin-bottom: 0.75rem;
+        opacity: 0.8;
+    }
+
+    .alumni-company {
+        display: inline-block;
+        background: var(--gradient);
+        color: var(--text-light);
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
+    }
+
+    .batch-badge {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: rgba(255, 255, 255, 0.2);
+        color: var(--text-light);
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.85rem;
+        backdrop-filter: blur(4px);
+    }
+
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .social-link {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--background);
+        color: var(--text-dark);
+        border-radius: 50%;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+        transform: translateY(-3px);
+        color: white;
+    }
+
+    .no-results {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 4rem 2rem;
+        color: var(--text-muted);
+    }
+
+    .no-results i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
 
 {% endblock %}

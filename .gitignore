@@ -7,3 +7,7 @@ db.sqlite3
 staticfiles
 .env
 venv
+
+migrations
+management
+error.log

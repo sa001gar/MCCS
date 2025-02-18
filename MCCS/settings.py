@@ -24,7 +24,7 @@ load_dotenv(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost','13.233.152.122','https://redesign-mccs.sagarkundu.live/','redesign-mccs.sagarkundu.live']
 
@@ -141,6 +141,12 @@ import os
 # Static files settings
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Media files settings
+MEDIA_URL = "media/"    
+MEDIA_ROOT = BASE_DIR / "media"
+
+
 
 
 
